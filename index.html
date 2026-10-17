@@ -363,6 +363,7 @@ const SETTINGS = {
   name: "Pastor Tom",       // "" for no name
   translation: "KJV",
   signature: "with love from Jordan",        // e.g. "With love, — your son"
+  startDate: "2026-10-31",
 };
 
 /* =========================================================
@@ -791,14 +792,27 @@ function shuffled(list, seed) {
 // repeats until the list has been exhausted.
 const DAILY_ORDER = shuffled(VERSES, 20250601);
 
-function dayNumber(date = new Date()) {
+// Absolute day number for a local calendar date (midnight-to-midnight local).
+function absDay(date = new Date()) {
   return Math.floor(
     Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86400000
   );
 }
 
-const verseOfTheDay = () => DAILY_ORDER[dayNumber() % DAILY_ORDER.length];
-const prayerOfTheDay = () => PRAYERS[dayNumber() % PRAYERS.length];
+// The absolute day number of SETTINGS.startDate.
+const START_ABS = (() => {
+  const [y, m, d] = SETTINGS.startDate.split("-").map(Number);
+  return Math.floor(Date.UTC(y, m - 1, d) / 86400000);
+})();
+
+// 0 on his birthday, 1 the next day, … wrapping at the list length.
+function dayIndex(date = new Date()) {
+  const diff = absDay(date) - START_ABS;
+  return ((diff % DAILY_ORDER.length) + DAILY_ORDER.length) % DAILY_ORDER.length;
+}
+
+const verseOfTheDay = () => DAILY_ORDER[dayIndex()];
+const prayerOfTheDay = () => PRAYERS[dayIndex() % PRAYERS.length];
 
 /* =========================================================
    5. ELEMENTS & STATE
@@ -849,8 +863,10 @@ function show(verse, animate = false) {
   el.prayer.textContent = prayerOfTheDay();
   el.dailyBtn.hidden = verse !== verseOfTheDay();
 
-  const idx = DAILY_ORDER.indexOf(verseOfTheDay()) + 1;
-  el.progress.textContent = `Day ${idx} of ${VERSES.length}`;
+  el.progress.textContent =
+  verse === verseOfTheDay()
+    ? `Day ${dayIndex() + 1} of ${VERSES.length}`
+    : "";
 
   if (animate && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
     el.verse.classList.remove("swap");
@@ -1000,10 +1016,10 @@ if (SETTINGS.signature) {
 show(verseOfTheDay());
 
 // Roll over to the new verse at midnight if left open.
-let trackedDay = dayNumber();
+let trackedDay = absDay();
 setInterval(() => {
-  const today = dayNumber();
-  if (today !== trackedDay) {
+  const today = absDay();
+  if (today !== absDay) {
     trackedDay = today;
     el.greeting.textContent = greetingText();
     el.date.textContent = dateText();
