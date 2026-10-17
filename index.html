@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Daily Blessings</title>
+<meta name="description" content="A blessing from Scripture every morning." />
+<meta name="theme-color" content="#c9a227" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Blessings" />
+<link rel="manifest" href="./manifest.json" />
+<link rel="apple-touch-icon" href="./icon.png" />
+<link rel="icon" href="./icon.svg" />
+
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #fffdf7;
+    --ink: #241f18;
+    --muted: #8a8175;
+    --gold: #c9a227;
+    --gold-deep: #96751c;
+    --gold-pale: #f7ecc9;
+    --line: #f0e7d2;
+    --heart: #b4493a;
+    --radius: 24px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    padding: clamp(14px, 4vw, 40px);
+    background: var(--bg);
+    background-image:
+      radial-gradient(820px 460px at 50% -6%, #fff9e8 0%, rgba(255,249,232,0) 68%),
+      radial-gradient(560px 400px at 108% 104%, #fdf4dd 0%, rgba(253,244,221,0) 72%);
+    color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .card {
+    position: relative;
+    width: 100%;
+    max-width: 660px;
+    padding: clamp(26px, 5vw, 48px);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow:
+      0 24px 56px -34px rgba(120, 96, 30, .38),
+      0 2px 10px -6px rgba(120, 96, 30, .14);
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    border-radius: var(--radius) var(--radius) 0 0;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--gold-pale), var(--gold), transparent);
+  }
+
+  /* ---------- Header ---------- */
+  .head { text-align: center; margin-bottom: clamp(20px, 4vw, 30px); }
+
+  .ornament {
+    display: block;
+    margin: 0 auto 14px;
+    color: var(--gold);
+    opacity: .9;
+  }
+
+  .greeting {
+    margin: 0;
+    font-family: Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+    font-size: clamp(1.14rem, 1rem + .55vw, 1.42rem);
+    color: var(--ink);
+    letter-spacing: .01em;
+  }
+
+  .date {
+    margin: 8px 0 0;
+    font-size: .7rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+  }
+
+  /* ---------- Verse ---------- */
+  .verse { margin: 0; padding: 0; text-align: center; }
+
+  .verse-text {
+    margin: 0 0 18px;
+    font-family: Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+    font-size: clamp(1.1rem, 1rem + .9vw, 1.44rem);
+    line-height: 1.7;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+
+  .verse-ref {
+    display: block;
+    font-style: normal;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+  }
+
+  .rule {
+    width: 52px;
+    height: 1px;
+    margin: 22px auto;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: .7;
+  }
+
+  .prayer {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-style: italic;
+    font-size: .94rem;
+    line-height: 1.62;
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+
+  .verse.swap { animation: rise .45s cubic-bezier(.2, .7, .3, 1) both; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(9px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ---------- Actions ---------- */
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: clamp(26px, 4vw, 34px);
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 18px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-size: .86rem;
+    cursor: pointer;
+    transition: background .2s, border-color .2s, color .2s, transform .12s;
+  }
+  .btn:hover { background: var(--bg-soft); border-color: #e3d4ac; }
+  .btn:active { transform: scale(.97); }
+  .btn:disabled { cursor: default; opacity: .7; }
+
+  .btn-primary {
+    background: linear-gradient(180deg, #f3d97f, #ddb747);
+    border-color: #d4ac39;
+    color: #2a2418;
+    font-weight: 600;
+    box-shadow: 0 6px 16px -10px rgba(180, 145, 30, .9);
+  }
+  .btn-primary:hover { background: linear-gradient(180deg, #f7e296, #e3c052); }
+
+  .btn-icon { width: 44px; height: 44px; padding: 0; flex: 0 0 auto; }
+  .btn-icon.is-on { color: var(--heart); border-color: #eed3ca; background: #fff8f6; }
+
+  :where(.btn, .link-btn):focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+    border-radius: 999px;
+  }
+
+  /* ---------- Footer ---------- */
+  .foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 20px;
+    min-height: 20px;
+    flex-wrap: wrap;
+  }
+
+  .link-btn {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: .78rem;
+    color: var(--muted);
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: rgba(138, 129, 117, .35);
+    text-underline-offset: 3px;
+  }
+  .link-btn:hover { color: var(--gold-deep); }
+
+  .progress { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); opacity: .75; }
+
+  .signature {
+    margin: 22px 0 0;
+    text-align: center;
+    font-size: .72rem;
+    letter-spacing: .1em;
+    color: var(--gold-deep);
+    opacity: .8;
+  }
+
+  /* ---------- Dialog ---------- */
+  dialog {
+    width: min(560px, calc(100vw - 32px));
+    max-height: min(82vh, 760px);
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: #fff;
+    color: var(--ink);
+    box-shadow: 0 34px 70px -22px rgba(90, 72, 20, .45);
+  }
+  dialog[open] { display: flex; flex-direction: column; }
+  dialog::backdrop { background: rgba(60, 48, 20, .38); backdrop-filter: blur(3px); }
+
+  .dialog-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 18px 22px; border-bottom: 1px solid var(--line);
+  }
+  .dialog-head h2 {
+    margin: 0; font-family: Georgia, serif; font-size: 1.06rem; font-weight: normal;
+  }
+
+  .dialog-body { overflow-y: auto; padding: 6px 22px 22px; }
+  #savedList { list-style: none; margin: 0; padding: 0; }
+
+  .saved-item { padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .saved-item:last-child { border-bottom: 0; }
+
+  .saved-text {
+    margin: 0 0 10px;
+    font-family: Georgia, serif;
+    font-size: .95rem;
+    line-height: 1.62;
+  }
+  .saved-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .saved-ref {
+    font-style: normal; font-size: .68rem; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--gold-deep);
+  }
+  .saved-remove {
+    padding: 0; border: 0; background: none; font: inherit; font-size: .74rem;
+    color: var(--muted); cursor: pointer; text-decoration: underline;
+    text-decoration-color: rgba(138, 129, 117, .35); text-underline-offset: 3px;
+  }
+  .saved-remove:hover { color: var(--heart); }
+
+  .empty { padding: 32px 0; text-align: center; color: var(--muted); font-size: .88rem; }
+
+  @media (max-width: 430px) {
+    .actions .btn-primary { flex: 1 1 100%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .001ms !important;
+      transition-duration: .001ms !important;
+    }
+  }
+</style>
+</head>
+
+<body>
+<main class="card">
+  <header class="head">
+    <svg class="ornament" viewBox="0 0 24 24" width="26" height="26" fill="none"
+         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="3.4" />
+      <path d="M12 1.6v3.1M12 19.3v3.1M1.6 12h3.1M19.3 12h3.1M4.6 4.6l2.2 2.2M17.2 17.2l2.2 2.2M19.4 4.6l-2.2 2.2M6.8 17.2l-2.2 2.2" />
+    </svg>
+    <p class="greeting" id="greeting">Good morning</p>
+    <p class="date" id="date"></p>
+  </header>
+
+  <blockquote class="verse" id="verse">
+    <p class="verse-text" id="verseText" aria-live="polite"></p>
+    <cite class="verse-ref" id="verseRef"></cite>
+    <div class="rule" aria-hidden="true"></div>
+    <p class="prayer" id="prayerText"></p>
+  </blockquote>
+
+  <div class="actions">
+    <button class="btn btn-primary" id="anotherBtn" type="button">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12a9 9 0 1 1-2.64-6.36" /><path d="M21 3v6h-6" />
+      </svg>
+      Another verse
+    </button>
+
+    <button class="btn" id="copyBtn" type="button">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="9" y="9" width="12" height="12" rx="2" />
+        <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" />
+      </svg>
+      Copy
+    </button>
+
+    <button class="btn btn-icon" id="favBtn" type="button" aria-pressed="false" aria-label="Save verse">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 20.5s-7.2-4.6-9.5-9.2A5.2 5.2 0 0 1 12 6.3a5.2 5.2 0 0 1 9.5 5c-2.3 4.6-9.5 9.2-9.5 9.2z" />
+      </svg>
+    </button>
+  </div>
+
+  <footer class="foot">
+    <button class="link-btn" id="savedBtn" type="button">
+      Saved verses <span id="savedCount"></span>
+    </button>
+    <button class="link-btn" id="dailyBtn" type="button" hidden>Back to today</button>
+    <span class="progress" id="progress"></span>
+  </footer>
+
+  <p class="signature" id="signature" hidden></p>
+</main>
+
+<dialog id="savedDialog" aria-labelledby="savedTitle">
+  <div class="dialog-head">
+    <h2 id="savedTitle">Saved verses</h2>
+    <button class="btn btn-icon" id="closeDialog" type="button" aria-label="Close">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" />
+      </svg>
+    </button>
+  </div>
+  <div class="dialog-body"><ul id="savedList"></ul></div>
+</dialog>
+
+<script>
+/* =========================================================
+   1. PERSONALISE
+   ========================================================= */
+const SETTINGS = {
+  name: "Pastor Tom",       // "" for no name
+  translation: "KJV",
+  signature: "with love from Jordan",        // e.g. "With love, — your son"
+};
+
+/* =========================================================
+   2. VERSES — King James Version (public domain)
+   Format: "Reference|Text"
+   ========================================================= */
+const RAW_VERSES = [
+"Numbers 6:24-26|The LORD bless thee, and keep thee: the LORD make his face shine upon thee, and be gracious unto thee: the LORD lift up his countenance upon thee, and give thee peace.",
+"Numbers 23:19|God is not a man, that he should lie; neither the son of man, that he should repent: hath he said, and shall he not do it? or hath he spoken, and shall he not make it good?",
+"Deuteronomy 28:2|And all these blessings shall come on thee, and overtake thee, if thou shalt hearken unto the voice of the LORD thy God.",
+"Deuteronomy 28:6|Blessed shalt thou be when thou comest in, and blessed shalt thou be when thou goest out.",
+"Deuteronomy 28:12|The LORD shall open unto thee his good treasure, the heaven to give the rain unto thy land in his season, and to bless all the work of thine hand.",
+"Deuteronomy 31:6|Be strong and of a good courage, fear not, nor be afraid of them: for the LORD thy God, he it is that doth go with thee; he will not fail thee, nor forsake thee.",
+"Deuteronomy 31:8|And the LORD, he it is that doth go before thee; he will be with thee, he will not fail thee, neither forsake thee: fear not, neither be dismayed.",
+"Joshua 1:9|Have not I commanded thee? Be strong and of a good courage; be not afraid, neither be thou dismayed: for the LORD thy God is with thee whithersoever thou goest.",
+"1 Samuel 2:2|There is none holy as the LORD: for there is none beside thee: neither is there any rock like our God.",
+"1 Chronicles 16:11|Seek the LORD and his strength, seek his face continually.",
+"1 Chronicles 29:11|Thine, O LORD, is the greatness, and the power, and the glory, and the victory, and the majesty: for all that is in the heaven and in the earth is thine; thine is the kingdom, O LORD, and thou art exalted as head above all.",
+"2 Chronicles 7:14|If my people, which are called by my name, shall humble themselves, and pray, and seek my face, and turn from their wicked ways; then will I hear from heaven, and will forgive their sin, and will heal their land.",
+"Nehemiah 8:10|Neither be ye sorry; for the joy of the LORD is your strength.",
+"Job 19:25|For I know that my redeemer liveth, and that he shall stand at the latter day upon the earth.",
+"Psalm 1:1-3|Blessed is the man that walketh not in the counsel of the ungodly, nor standeth in the way of sinners, nor sitteth in the seat of the scornful. But his delight is in the law of the LORD; and in his law doth he meditate day and night. And he shall be like a tree planted by the rivers of water, that bringeth forth his fruit in his season; his leaf also shall not wither; and whatsoever he doeth shall prosper.",
+"Psalm 3:3|But thou, O LORD, art a shield for me; my glory, and the lifter up of mine head.",
+"Psalm 4:8|I will both lay me down in peace, and sleep: for thou, LORD, only makest me dwell in safety.",
+"Psalm 5:3|My voice shalt thou hear in the morning, O LORD; in the morning will I direct my prayer unto thee, and will look up.",
+"Psalm 5:11|But let all those that put their trust in thee rejoice: let them ever shout for joy, because thou defendest them: let them also that love thy name be joyful in thee.",
+"Psalm 5:12|For thou, LORD, wilt bless the righteous; with favour wilt thou compass him as with a shield.",
+"Psalm 9:9-10|The LORD also will be a refuge for the oppressed, a refuge in times of trouble. And they that know thy name will put their trust in thee: for thou, LORD, hast not forsaken them that seek thee.",
+"Psalm 16:8|I have set the LORD always before me: because he is at my right hand, I shall not be moved.",
+"Psalm 16:11|Thou wilt shew me the path of life: in thy presence is fulness of joy; at thy right hand there are pleasures for evermore.",
+"Psalm 18:2|The LORD is my rock, and my fortress, and my deliverer; my God, my strength, in whom I will trust; my buckler, and the horn of my salvation, and my high tower.",
+"Psalm 18:28|For thou wilt light my candle: the LORD my God will enlighten my darkness.",
+"Psalm 18:30|As for God, his way is perfect: the word of the LORD is tried: he is a buckler to all those that trust in him.",
+"Psalm 19:14|Let the words of my mouth, and the meditation of my heart, be acceptable in thy sight, O LORD, my strength, and my redeemer.",
+"Psalm 20:4|Grant thee according to thine own heart, and fulfil all thy counsel.",
+"Psalm 20:7|Some trust in chariots, and some in horses: but we will remember the name of the LORD our God.",
+"Psalm 21:6|For thou hast made him most blessed for ever: thou hast made him exceeding glad with thy countenance.",
+"Psalm 23:1-3|The LORD is my shepherd; I shall not want. He maketh me to lie down in green pastures: he leadeth me beside the still waters. He restoreth my soul: he leadeth me in the paths of righteousness for his name's sake.",
+"Psalm 23:4|Yea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me; thy rod and thy staff they comfort me.",
+"Psalm 23:6|Surely goodness and mercy shall follow me all the days of my life: and I will dwell in the house of the LORD for ever.",
+"Psalm 24:1|The earth is the LORD's, and the fulness thereof; the world, and they that dwell therein.",
+"Psalm 27:1|The LORD is my light and my salvation; whom shall I fear? the LORD is the strength of my life; of whom shall I be afraid?",
+"Psalm 27:14|Wait on the LORD: be of good courage, and he shall strengthen thine heart: wait, I say, on the LORD.",
+"Psalm 28:7|The LORD is my strength and my shield; my heart trusted in him, and I am helped: therefore my heart greatly rejoiceth; and with my song will I praise him.",
+"Psalm 29:11|The LORD will give strength unto his people; the LORD will bless his people with peace.",
+"Psalm 30:5|For his anger endureth but a moment; in his favour is life: weeping may endure for a night, but joy cometh in the morning.",
+"Psalm 30:11|Thou hast turned for me my mourning into dancing: thou hast put off my sackcloth, and girded me with gladness.",
+"Psalm 31:19|Oh how great is thy goodness, which thou hast laid up for them that fear thee; which thou hast wrought for them that trust in thee before the sons of men!",
+"Psalm 32:8|I will instruct thee and teach thee in the way which thou shalt go: I will guide thee with mine eye.",
+"Psalm 33:12|Blessed is the nation whose God is the LORD; and the people whom he hath chosen for his own inheritance.",
+"Psalm 34:1|I will bless the LORD at all times: his praise shall continually be in my mouth.",
+"Psalm 34:8|O taste and see that the LORD is good: blessed is the man that trusteth in him.",
+"Psalm 34:17|The righteous cry, and the LORD heareth, and delivereth them out of all their troubles.",
+"Psalm 36:7-9|How excellent is thy lovingkindness, O God! therefore the children of men put their trust under the shadow of thy wings. They shall be abundantly satisfied with the fatness of thy house; and thou shalt make them drink of the river of thy pleasures. For with thee is the fountain of life: in thy light shall we see light.",
+"Psalm 37:4|Delight thyself also in the LORD; and he shall give thee the desires of thine heart.",
+"Psalm 37:5|Commit thy way unto the LORD; trust also in him; and he shall bring it to pass.",
+"Psalm 37:23-24|The steps of a good man are ordered by the LORD: and he delighteth in his way. Though he fall, he shall not be utterly cast down: for the LORD upholdeth him with his hand.",
+"Psalm 40:1-2|I waited patiently for the LORD; and he inclined unto me, and heard my cry. He brought me up also out of an horrible pit, out of the miry clay, and set my feet upon a rock, and established my goings.",
+"Psalm 41:1-2|Blessed is he that considereth the poor: the LORD will deliver him in time of trouble. The LORD will preserve him, and keep him alive; and he shall be blessed upon the earth.",
+"Psalm 46:1|God is our refuge and strength, a very present help in trouble.",
+"Psalm 46:10|Be still, and know that I am God.",
+"Psalm 48:14|For this God is our God for ever and ever: he will be our guide even unto death.",
+"Psalm 55:22|Cast thy burden upon the LORD, and he shall sustain thee: he shall never suffer the righteous to be moved.",
+"Psalm 56:3|What time I am afraid, I will trust in thee.",
+"Psalm 59:16|But I will sing of thy power; yea, I will sing aloud of thy mercy in the morning: for thou hast been my defence and refuge in the day of my trouble.",
+"Psalm 62:1-2|Truly my soul waiteth upon God: from him cometh my salvation. He only is my rock and my salvation; he is my defence; I shall not be greatly moved.",
+"Psalm 63:1|O God, thou art my God; early will I seek thee: my soul thirsteth for thee, my flesh longeth for thee in a dry and thirsty land, where no water is.",
+"Psalm 65:11|Thou crownest the year with thy goodness; and thy paths drop fatness.",
+"Psalm 66:20|Blessed be God, which hath not turned away my prayer, nor his mercy from me.",
+"Psalm 67:1-2|God be merciful unto us, and bless us; and cause his face to shine upon us; Selah. That thy way may be known upon earth, thy saving health among all nations.",
+"Psalm 68:19|Blessed be the Lord, who daily loadeth us with benefits, even the God of our salvation. Selah.",
+"Psalm 71:5|For thou art my hope, O Lord GOD: thou art my trust from my youth.",
+"Psalm 71:9|Cast me not off in the time of old age; forsake me not when my strength faileth.",
+"Psalm 73:26|My flesh and my heart faileth: but God is the strength of my heart, and my portion for ever.",
+"Psalm 84:11|For the LORD God is a sun and shield: the LORD will give grace and glory: no good thing will he withhold from them that walk uprightly.",
+"Psalm 85:12|Yea, the LORD shall give that which is good; and our land shall yield her increase.",
+"Psalm 86:15|But thou, O Lord, art a God full of compassion, and gracious, longsuffering, and plenteous in mercy and truth.",
+"Psalm 89:1|I will sing of the mercies of the LORD for ever: with my mouth will I make known thy faithfulness to all generations.",
+"Psalm 90:14|O satisfy us early with thy mercy; that we may rejoice and be glad all our days.",
+"Psalm 90:17|And let the beauty of the LORD our God be upon us: and establish thou the work of our hands upon us; yea, the work of our hands establish thou it.",
+"Psalm 91:1-2|He that dwelleth in the secret place of the most High shall abide under the shadow of the Almighty. I will say of the LORD, He is my refuge and my fortress: my God; in him will I trust.",
+"Psalm 91:11|For he shall give his angels charge over thee, to keep thee in all thy ways.",
+"Psalm 92:1-2|It is a good thing to give thanks unto the LORD, and to sing praises unto thy name, O most High: to shew forth thy lovingkindness in the morning, and thy faithfulness every night.",
+"Psalm 94:19|In the multitude of my thoughts within me thy comforts delight my soul.",
+"Psalm 95:1-2|O come, let us sing unto the LORD: let us make a joyful noise to the rock of our salvation. Let us come before his presence with thanksgiving, and make a joyful noise unto him with psalms.",
+"Psalm 100:4-5|Enter into his gates with thanksgiving, and into his courts with praise: be thankful unto him, and bless his name. For the LORD is good; his mercy is everlasting; and his truth endureth to all generations.",
+"Psalm 103:1-5|Bless the LORD, O my soul: and all that is within me, bless his holy name. Bless the LORD, O my soul, and forget not all his benefits: who forgiveth all thine iniquities; who healeth all thy diseases; who redeemeth thy life from destruction; who crowneth thee with lovingkindness and tender mercies; who satisfieth thy mouth with good things.",
+"Psalm 103:8|The LORD is merciful and gracious, slow to anger, and plenteous in mercy.",
+"Psalm 103:12|As far as the east is from the west, so far hath he removed our transgressions from us.",
+"Psalm 104:33|I will sing unto the LORD as long as I live: I will sing praise to my God while I have my being.",
+"Psalm 107:1|O give thanks unto the LORD, for he is good: for his mercy endureth for ever.",
+"Psalm 107:9|For he satisfieth the longing soul, and filleth the hungry soul with goodness.",
+"Psalm 112:1-2|Blessed is the man that feareth the LORD, that delighteth greatly in his commandments. His seed shall be mighty upon earth: the generation of the upright shall be blessed.",
+"Psalm 115:14-15|The LORD shall increase you more and more, you and your children. Ye are blessed of the LORD which made heaven and earth.",
+"Psalm 116:1-2|I love the LORD, because he hath heard my voice and my supplications. Because he hath inclined his ear unto me, therefore will I call upon him as long as I live.",
+"Psalm 118:24|This is the day which the LORD hath made; we will rejoice and be glad in it.",
+"Psalm 119:105|Thy word is a lamp unto my feet, and a light unto my path.",
+"Psalm 119:114|Thou art my hiding place and my shield: I hope in thy word.",
+"Psalm 119:165|Great peace have they which love thy law: and nothing shall offend them.",
+"Psalm 121:1-2|I will lift up mine eyes unto the hills, from whence cometh my help. My help cometh from the LORD, which made heaven and earth.",
+"Psalm 121:7-8|The LORD shall preserve thee from all evil: he shall preserve thy soul. The LORD shall preserve thy going out and thy coming in from this time forth, and even for evermore.",
+"Psalm 124:8|Our help is in the name of the LORD, who made heaven and earth.",
+"Psalm 126:3|The LORD hath done great things for us; whereof we are glad.",
+"Psalm 127:1|Except the LORD build the house, they labour in vain that build it: except the LORD keep the city, the watchman waketh but in vain.",
+"Psalm 128:1-2|Blessed is every one that feareth the LORD; that walketh in his ways. For thou shalt eat the labour of thine hands: happy shalt thou be, and it shall be well with thee.",
+"Psalm 130:5|I wait for the LORD, my soul doth wait, and in his word do I hope.",
+"Psalm 131:2|Surely I have behaved and quieted myself, as a child that is weaned of his mother: my soul is even as a weaned child.",
+"Psalm 133:1|Behold, how good and how pleasant it is for brethren to dwell together in unity!",
+"Psalm 134:3|The LORD that made heaven and earth bless thee out of Zion.",
+"Psalm 136:1|O give thanks unto the LORD; for he is good: for his mercy endureth for ever.",
+"Psalm 138:8|The LORD will perfect that which concerneth me: thy mercy, O LORD, endureth for ever: forsake not the works of thine own hands.",
+"Psalm 139:14|I will praise thee; for I am fearfully and wonderfully made: marvellous are thy works; and that my soul knoweth right well.",
+"Psalm 143:8|Cause me to hear thy lovingkindness in the morning; for in thee do I trust: cause me to know the way wherein I should walk; for I lift up my soul unto thee.",
+"Psalm 144:15|Happy is that people, that is in such a case: yea, happy is that people, whose God is the LORD.",
+"Psalm 145:9|The LORD is good to all: and his tender mercies are over all his works.",
+"Psalm 145:18|The LORD is nigh unto all them that call upon him, to all that call upon him in truth.",
+"Psalm 146:5|Happy is he that hath the God of Jacob for his help, whose hope is in the LORD his God.",
+"Psalm 147:3|He healeth the broken in heart, and bindeth up their wounds.",
+"Psalm 148:13|Let them praise the name of the LORD: for his name alone is excellent; his glory is above the earth and heaven.",
+"Psalm 150:6|Let every thing that hath breath praise the LORD. Praise ye the LORD.",
+"Proverbs 3:5-6|Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.",
+"Proverbs 3:9-10|Honour the LORD with thy substance, and with the firstfruits of all thine increase: so shall thy barns be filled with plenty, and thy presses shall burst out with new wine.",
+"Proverbs 4:18|But the path of the just is as the shining light, that shineth more and more unto the perfect day.",
+"Proverbs 10:22|The blessing of the LORD, it maketh rich, and he addeth no sorrow with it.",
+"Proverbs 11:25|The liberal soul shall be made fat: and he that watereth shall be watered also himself.",
+"Proverbs 16:3|Commit thy works unto the LORD, and thy thoughts shall be established.",
+"Proverbs 16:9|A man's heart deviseth his way: but the LORD directeth his steps.",
+"Proverbs 16:20|He that handleth a matter wisely shall find good: and whoso trusteth in the LORD, happy is he.",
+"Proverbs 18:10|The name of the LORD is a strong tower: the righteous runneth into it, and is safe.",
+"Proverbs 19:21|There are many devices in a man's heart; nevertheless the counsel of the LORD, that shall stand.",
+"Proverbs 22:4|By humility and the fear of the LORD are riches, and honour, and life.",
+"Proverbs 23:18|For surely there is an end; and thine expectation shall not be cut off.",
+"Proverbs 28:20|A faithful man shall abound with blessings.",
+"Proverbs 29:25|The fear of man bringeth a snare: but whoso putteth his trust in the LORD shall be safe.",
+"Isaiah 12:2|Behold, God is my salvation; I will trust, and not be afraid: for the LORD JEHOVAH is my strength and my song, and he also is become my salvation.",
+"Isaiah 26:3|Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee.",
+"Isaiah 30:21|And thine ears shall hear a word behind thee, saying, This is the way, walk ye in it, when ye turn to the right hand, and when ye turn to the left.",
+"Isaiah 32:17|And the work of righteousness shall be peace; and the effect of righteousness quietness and assurance for ever.",
+"Isaiah 40:8|The grass withereth, the flower fadeth: but the word of our God shall stand for ever.",
+"Isaiah 40:11|He shall feed his flock like a shepherd: he shall gather the lambs with his arm, and carry them in his bosom, and shall gently lead those that are with young.",
+"Isaiah 40:29|He giveth power to the faint; and to them that have no might he increaseth strength.",
+"Isaiah 40:31|But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint.",
+"Isaiah 41:10|Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness.",
+"Isaiah 41:13|For I the LORD thy God will hold thy right hand, saying unto thee, Fear not; I will help thee.",
+"Isaiah 43:2|When thou passest through the waters, I will be with thee; and through the rivers, they shall not overflow thee: when thou walkest through the fire, thou shalt not be burned; neither shall the flame kindle upon thee.",
+"Isaiah 43:18-19|Remember ye not the former things, neither consider the things of old. Behold, I will do a new thing; now it shall spring forth; shall ye not know it? I will even make a way in the wilderness, and rivers in the desert.",
+"Isaiah 44:3|For I will pour water upon him that is thirsty, and floods upon the dry ground: I will pour my spirit upon thy seed, and my blessing upon thine offspring.",
+"Isaiah 46:4|And even to your old age I am he; and even to hoar hairs will I carry you: I have made, and I will bear; even I will carry, and will deliver you.",
+"Isaiah 49:16|Behold, I have graven thee upon the palms of my hands; thy walls are continually before me.",
+"Isaiah 51:11|Therefore the redeemed of the LORD shall return, and come with singing unto Zion; and everlasting joy shall be upon their head: they shall obtain gladness and joy; and sorrow and mourning shall flee away.",
+"Isaiah 54:10|For the mountains shall depart, and the hills be removed; but my kindness shall not depart from thee, neither shall the covenant of my peace be removed, saith the LORD that hath mercy on thee.",
+"Isaiah 54:17|No weapon that is formed against thee shall prosper; and every tongue that shall rise against thee in judgment thou shalt condemn. This is the heritage of the servants of the LORD.",
+"Isaiah 55:6|Seek ye the LORD while he may be found, call ye upon him while he is near.",
+"Isaiah 55:11|So shall my word be that goeth forth out of my mouth: it shall not return unto me void, but it shall accomplish that which I please, and it shall prosper in the thing whereto I sent it.",
+"Isaiah 55:12|For ye shall go out with joy, and be led forth with peace: the mountains and the hills shall break forth before you into singing, and all the trees of the field shall clap their hands.",
+"Isaiah 58:11|And the LORD shall guide thee continually, and satisfy thy soul in drought, and make fat thy bones: and thou shalt be like a watered garden, and like a spring of water, whose waters fail not.",
+"Isaiah 60:1|Arise, shine; for thy light is come, and the glory of the LORD is risen upon thee.",
+"Isaiah 61:3|To appoint unto them that mourn in Zion, to give unto them beauty for ashes, the oil of joy for mourning, the garment of praise for the spirit of heaviness; that they might be called trees of righteousness, the planting of the LORD, that he might be glorified.",
+"Isaiah 61:10|I will greatly rejoice in the LORD, my soul shall be joyful in my God; for he hath clothed me with the garments of salvation, he hath covered me with the robe of righteousness.",
+"Isaiah 62:4|Thou shalt no more be termed Forsaken; neither shall thy land any more be termed Desolate: but thou shalt be called Hephzibah, and thy land Beulah: for the LORD delighteth in thee.",
+"Isaiah 64:4|For since the beginning of the world men have not heard, nor perceived by the ear, neither hath the eye seen, O God, beside thee, what he hath prepared for him that waiteth for him.",
+"Isaiah 65:24|And it shall come to pass, that before they call, I will answer; and while they are yet speaking, I will hear.",
+"Isaiah 66:13|As one whom his mother comforteth, so will I comfort you; and ye shall be comforted.",
+"Jeremiah 17:7-8|Blessed is the man that trusteth in the LORD, and whose hope the LORD is. For he shall be as a tree planted by the waters, and that spreadeth out her roots by the river, and shall not see when heat cometh, but her leaf shall be green.",
+"Jeremiah 29:11|For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end.",
+"Jeremiah 31:3|The LORD hath appeared of old unto me, saying, Yea, I have loved thee with an everlasting love: therefore with lovingkindness have I drawn thee.",
+"Jeremiah 31:13|For I will turn their mourning into joy, and will comfort them, and make them rejoice from their sorrow.",
+"Jeremiah 32:17|Ah Lord GOD! behold, thou hast made the heaven and the earth by thy great power and stretched out arm, and there is nothing too hard for thee.",
+"Jeremiah 33:3|Call unto me, and I will answer thee, and shew thee great and mighty things, which thou knowest not.",
+"Lamentations 3:22-23|It is of the LORD's mercies that we are not consumed, because his compassions fail not. They are new every morning: great is thy faithfulness.",
+"Lamentations 3:25-26|The LORD is good unto them that wait for him, to the soul that seeketh him. It is good that a man should both hope and quietly wait for the salvation of the LORD.",
+"Ezekiel 34:26|And I will make them and the places round about my hill a blessing; and I will cause the shower to come down in his season; there shall be showers of blessing.",
+"Ezekiel 36:26|A new heart also will I give you, and a new spirit will I put within you: and I will take away the stony heart out of your flesh, and I will give you an heart of flesh.",
+"Daniel 2:22|He revealeth the deep and secret things: he knoweth what is in the darkness, and the light dwelleth with him.",
+"Daniel 3:17|If it be so, our God whom we serve is able to deliver us from the burning fiery furnace, and he will deliver us out of thine hand, O king.",
+"Daniel 6:23|Then was the king exceedingly glad for him, and commanded that they should take Daniel up out of the den. So Daniel was taken up out of the den, and no manner of hurt was found upon him, because he believed in his God.",
+"Daniel 9:9|To the Lord our God belong mercies and forgivenesses, though we have rebelled against him.",
+"Daniel 10:19|And said, O man greatly beloved, fear not: peace be unto thee, be strong, yea, be strong.",
+"Daniel 12:3|And they that be wise shall shine as the brightness of the firmament; and they that turn many to righteousness as the stars for ever and ever.",
+"Micah 6:8|He hath shewed thee, O man, what is good; and what doth the LORD require of thee, but to do justly, and to love mercy, and to walk humbly with thy God?",
+"Micah 7:8|Rejoice not against me, O mine enemy: when I fall, I shall arise; when I sit in darkness, the LORD shall be a light unto me.",
+"Habakkuk 3:18-19|Yet I will rejoice in the LORD, I will joy in the God of my salvation. The LORD God is my strength, and he will make my feet like hinds' feet, and he will make me to walk upon mine high places.",
+"Zephaniah 3:17|The LORD thy God in the midst of thee is mighty; he will save, he will rejoice over thee with joy; he will rest in his love, he will joy over thee with singing.",
+"Zechariah 4:6|Then he answered and spake unto me, saying, This is the word of the LORD unto Zerubbabel, saying, Not by might, nor by power, but by my spirit, saith the LORD of hosts.",
+"Zechariah 8:23|Thus saith the LORD of hosts; In those days it shall come to pass, that ten men shall take hold out of all languages of the nations, even shall take hold of the skirt of him that is a Jew, saying, We will go with you: for we have heard that God is with you.",
+"Zechariah 9:9|Rejoice greatly, O daughter of Zion; shout, O daughter of Jerusalem: behold, thy King cometh unto thee: he is just, and having salvation; lowly, and riding upon an ass, and upon a colt the foal of an ass.",
+"Malachi 3:10|Bring ye all the tithes into the storehouse, that there may be meat in mine house, and prove me now herewith, saith the LORD of hosts, if I will not open you the windows of heaven, and pour you out a blessing, that there shall not be room enough to receive it.",
+"Malachi 4:2|But unto you that fear my name shall the Sun of righteousness arise with healing in his wings; and ye shall go forth, and grow up as calves of the stall.",
+"Matthew 5:3-10|Blessed are the poor in spirit: for theirs is the kingdom of heaven. Blessed are they that mourn: for they shall be comforted. Blessed are the meek: for they shall inherit the earth. Blessed are they which do hunger and thirst after righteousness: for they shall be filled. Blessed are the merciful: for they shall obtain mercy. Blessed are the pure in heart: for they shall see God. Blessed are the peacemakers: for they shall be called the children of God. Blessed are they which are persecuted for righteousness' sake: for theirs is the kingdom of heaven.",
+"Matthew 5:14|Ye are the light of the world. A city that is set on an hill cannot be hid.",
+"Matthew 5:16|Let your light so shine before men, that they may see your good works, and glorify your Father which is in heaven.",
+"Matthew 6:33|But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you.",
+"Matthew 6:34|Take therefore no thought for the morrow: for the morrow shall take thought for the things of itself. Sufficient unto the day is the evil thereof.",
+"Matthew 7:7|Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you.",
+"Matthew 11:28-30|Come unto me, all ye that labour and are heavy laden, and I will give you rest. Take my yoke upon you, and learn of me; for I am meek and lowly in heart: and ye shall find rest unto your souls. For my yoke is easy, and my burden is light.",
+"Matthew 28:19-20|Go ye therefore, and teach all nations, baptizing them in the name of the Father, and of the Son, and of the Holy Ghost: teaching them to observe all things whatsoever I have commanded you: and, lo, I am with you alway, even unto the end of the world. Amen.",
+"Mark 9:23|Jesus said unto him, If thou canst believe, all things are possible to him that believeth.",
+"Mark 11:24|Therefore I say unto you, What things soever ye desire, when ye pray, believe that ye receive them, and ye shall have them.",
+"Luke 1:37|For with God nothing shall be impossible.",
+"Luke 2:14|Glory to God in the highest, and on earth peace, good will toward men.",
+"Luke 6:38|Give, and it shall be given unto you; good measure, pressed down, and shaken together, and running over, shall men give into your bosom. For with the same measure that ye mete withal it shall be measured to you again.",
+"Luke 12:32|Fear not, little flock; for it is your Father's good pleasure to give you the kingdom.",
+"John 1:16|And of his fulness have all we received, and grace for grace.",
+"John 3:16|For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.",
+"John 8:12|Then spake Jesus again unto them, saying, I am the light of the world: he that followeth me shall not walk in darkness, but shall have the light of life.",
+"John 10:10|The thief cometh not, but for to steal, and to kill, and to destroy: I am come that they might have life, and that they might have it more abundantly.",
+"John 11:25|Jesus said unto her, I am the resurrection, and the life: he that believeth in me, though he were dead, yet shall he live.",
+"John 14:1-3|Let not your heart be troubled: ye believe in God, believe also in me. In my Father's house are many mansions: if it were not so, I would have told you. I go to prepare a place for you. And if I go and prepare a place for you, I will come again, and receive you unto myself; that where I am, there ye may be also.",
+"John 14:27|Peace I leave with you, my peace I give unto you: not as the world giveth, give I unto you. Let not your heart be troubled, neither let it be afraid.",
+"John 15:5|I am the vine, ye are the branches: He that abideth in me, and I in him, the same bringeth forth much fruit: for without me ye can do nothing.",
+"John 15:7|If ye abide in me, and my words abide in you, ye shall ask what ye will, and it shall be done unto you.",
+"John 16:33|These things I have spoken unto you, that in me ye might have peace. In the world ye shall have tribulation: but be of good cheer; I have overcome the world.",
+"John 17:17|Sanctify them through thy truth: thy word is truth.",
+"Acts 1:8|But ye shall receive power, after that the Holy Ghost is come upon you: and ye shall be witnesses unto me both in Jerusalem, and in all Judaea, and in Samaria, and unto the uttermost part of the earth.",
+"Acts 2:21|And it shall come to pass, that whosoever shall call on the name of the Lord shall be saved.",
+"Acts 3:19|Repent ye therefore, and be converted, that your sins may be blotted out, when the times of refreshing shall come from the presence of the Lord.",
+"Acts 16:31|And they said, Believe on the Lord Jesus Christ, and thou shalt be saved, and thy house.",
+"Acts 20:24|But none of these things move me, neither count I my life dear unto myself, so that I might finish my course with joy, and the ministry, which I have received of the Lord Jesus, to testify the gospel of the grace of God.",
+"Romans 1:16|For I am not ashamed of the gospel of Christ: for it is the power of God unto salvation to every one that believeth.",
+"Romans 5:1|Therefore being justified by faith, we have peace with God through our Lord Jesus Christ.",
+"Romans 5:5|And hope maketh not ashamed; because the love of God is shed abroad in our hearts by the Holy Ghost which is given unto us.",
+"Romans 8:1|There is therefore now no condemnation to them which are in Christ Jesus, who walk not after the flesh, but after the Spirit.",
+"Romans 8:28|And we know that all things work together for good to them that love God, to them who are the called according to his purpose.",
+"Romans 8:31|What shall we then say to these things? If God be for us, who can be against us?",
+"Romans 8:37-39|Nay, in all these things we are more than conquerors through him that loved us. For I am persuaded, that neither death, nor life, nor angels, nor principalities, nor powers, nor things present, nor things to come, nor height, nor depth, nor any other creature, shall be able to separate us from the love of God, which is in Christ Jesus our Lord.",
+"Romans 12:2|And be not conformed to this world: but be ye transformed by the renewing of your mind, that ye may prove what is that good, and acceptable, and perfect, will of God.",
+"Romans 12:12|Rejoicing in hope; patient in tribulation; continuing instant in prayer.",
+"Romans 15:13|Now the God of hope fill you with all joy and peace in believing, that ye may abound in hope, through the power of the Holy Ghost.",
+"Romans 16:20|And the God of peace shall bruise Satan under your feet shortly. The grace of our Lord Jesus Christ be with you. Amen.",
+"1 Corinthians 1:9|God is faithful, by whom ye were called unto the fellowship of his Son Jesus Christ our Lord.",
+"1 Corinthians 2:9|But as it is written, Eye hath not seen, nor ear heard, neither have entered into the heart of man, the things which God hath prepared for them that love him.",
+"1 Corinthians 3:16|Know ye not that ye are the temple of God, and that the Spirit of God dwelleth in you?",
+"1 Corinthians 10:13|There hath no temptation taken you but such as is common to man: but God is faithful, who will not suffer you to be tempted above that ye are able; but will with the temptation also make a way to escape, that ye may be able to bear it.",
+"1 Corinthians 13:13|And now abideth faith, hope, charity, these three; but the greatest of these is charity.",
+"1 Corinthians 15:57|But thanks be to God, which giveth us the victory through our Lord Jesus Christ.",
+"1 Corinthians 15:58|Therefore, my beloved brethren, be ye stedfast, unmoveable, always abounding in the work of the Lord, forasmuch as ye know that your labour is not in vain in the Lord.",
+"1 Corinthians 16:13|Watch ye, stand fast in the faith, quit you like men, be strong.",
+"2 Corinthians 1:3-4|Blessed be God, even the Father of our Lord Jesus Christ, the Father of mercies, and the God of all comfort; who comforteth us in all our tribulation, that we may be able to comfort them which are in any trouble, by the comfort wherewith we ourselves are comforted of God.",
+"2 Corinthians 4:16|For which cause we faint not; but though our outward man perish, yet the inward man is renewed day by day.",
+"2 Corinthians 4:18|While we look not at the things which are seen, but at the things which are not seen: for the things which are seen are temporal; but the things which are not seen are eternal.",
+"2 Corinthians 5:17|Therefore if any man be in Christ, he is a new creature: old things are passed away; behold, all things are become new.",
+"2 Corinthians 9:8|And God is able to make all grace abound toward you; that ye, always having all sufficiency in all things, may abound to every good work.",
+"2 Corinthians 12:9|And he said unto me, My grace is sufficient for thee: for my strength is made perfect in weakness.",
+"2 Corinthians 13:11|Finally, brethren, farewell. Be perfect, be of good comfort, be of one mind, live in peace; and the God of love and peace shall be with you.",
+"Galatians 2:20|I am crucified with Christ: nevertheless I live; yet not I, but Christ liveth in me: and the life which I now live in the flesh I live by the faith of the Son of God, who loved me, and gave himself for me.",
+"Galatians 5:1|Stand fast therefore in the liberty wherewith Christ hath made us free, and be not entangled again with the yoke of bondage.",
+"Galatians 5:22-23|But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith, meekness, temperance: against such there is no law.",
+"Galatians 6:9|And let us not be weary in well doing: for in due season we shall reap, if we faint not.",
+"Ephesians 1:3|Blessed be the God and Father of our Lord Jesus Christ, who hath blessed us with all spiritual blessings in heavenly places in Christ.",
+"Ephesians 2:8-9|For by grace are ye saved through faith; and that not of yourselves: it is the gift of God: not of works, lest any man should boast.",
+"Ephesians 2:10|For we are his workmanship, created in Christ Jesus unto good works, which God hath before ordained that we should walk in them.",
+"Ephesians 3:16-19|That he would grant you, according to the riches of his glory, to be strengthened with might by his Spirit in the inner man; that Christ may dwell in your hearts by faith; that ye, being rooted and grounded in love, may be able to comprehend with all saints what is the breadth, and length, and depth, and height; and to know the love of Christ, which passeth knowledge, that ye might be filled with all the fulness of God.",
+"Ephesians 3:20-21|Now unto him that is able to do exceeding abundantly above all that we ask or think, according to the power that worketh in us, unto him be glory in the church by Christ Jesus throughout all ages, world without end. Amen.",
+"Ephesians 4:32|And be ye kind one to another, tenderhearted, forgiving one another, even as God for Christ's sake hath forgiven you.",
+"Ephesians 6:10-11|Finally, my brethren, be strong in the Lord, and in the power of his might. Put on the whole armour of God, that ye may be able to stand against the wiles of the devil.",
+"Ephesians 6:23|Peace be to the brethren, and love with faith, from God the Father and the Lord Jesus Christ.",
+"Philippians 1:6|Being confident of this very thing, that he which hath begun a good work in you will perform it until the day of Jesus Christ.",
+"Philippians 4:6-7|Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God. And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.",
+"Philippians 4:13|I can do all things through Christ which strengtheneth me.",
+"Philippians 4:19|But my God shall supply all your need according to his riches in glory by Christ Jesus.",
+"Colossians 1:11|Strengthened with all might, according to his glorious power, unto all patience and longsuffering with joyfulness.",
+"Colossians 3:15|And let the peace of God rule in your hearts, to the which also ye are called in one body; and be ye thankful.",
+"Colossians 3:23|And whatsoever ye do, do it heartily, as to the Lord, and not unto men.",
+"1 Thessalonians 5:16-18|Rejoice evermore. Pray without ceasing. In every thing give thanks: for this is the will of God in Christ Jesus concerning you.",
+"2 Thessalonians 3:3|But the Lord is faithful, who shall stablish you, and keep you from evil.",
+"2 Thessalonians 3:16|Now the Lord of peace himself give you peace always by all means. The Lord be with you all.",
+"1 Timothy 1:17|Now unto the King eternal, immortal, invisible, the only wise God, be honour and glory for ever and ever. Amen.",
+"1 Timothy 6:6|But godliness with contentment is great gain.",
+"2 Timothy 1:7|For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind.",
+"2 Timothy 4:7|I have fought a good fight, I have finished my course, I have kept the faith.",
+"Hebrews 4:16|Let us therefore come boldly unto the throne of grace, that we may obtain mercy, and find grace to help in time of need.",
+"Hebrews 6:19|Which hope we have as an anchor of the soul, both sure and stedfast.",
+"Hebrews 11:1|Now faith is the substance of things hoped for, the evidence of things not seen.",
+"Hebrews 12:1-2|Let us lay aside every weight, and the sin which doth so easily beset us, and let us run with patience the race that is set before us, looking unto Jesus the author and finisher of our faith.",
+"Hebrews 13:5|Let your conversation be without covetousness; and be content with such things as ye have: for he hath said, I will never leave thee, nor forsake thee.",
+"Hebrews 13:8|Jesus Christ the same yesterday, and to day, and for ever.",
+"James 1:5|If any of you lack wisdom, let him ask of God, that giveth to all men liberally, and upbraideth not; and it shall be given him.",
+"James 1:12|Blessed is the man that endureth temptation: for when he is tried, he shall receive the crown of life, which the Lord hath promised to them that love him.",
+"James 1:17|Every good gift and every perfect gift is from above, and cometh down from the Father of lights, with whom is no variableness, neither shadow of turning.",
+"James 4:8|Draw nigh to God, and he will draw nigh to you.",
+"James 5:16|Confess your faults one to another, and pray one for another, that ye may be healed. The effectual fervent prayer of a righteous man availeth much.",
+"1 Peter 1:3|Blessed be the God and Father of our Lord Jesus Christ, which according to his abundant mercy hath begotten us again unto a lively hope by the resurrection of Jesus Christ from the dead.",
+"1 Peter 2:9|But ye are a chosen generation, a royal priesthood, an holy nation, a peculiar people; that ye should shew forth the praises of him who hath called you out of darkness into his marvellous light.",
+"1 Peter 5:7|Casting all your care upon him; for he careth for you.",
+"1 Peter 5:10|But the God of all grace, who hath called us unto his eternal glory by Christ Jesus, after that ye have suffered a while, make you perfect, stablish, strengthen, settle you.",
+"2 Peter 1:3|According as his divine power hath given unto us all things that pertain unto life and godliness, through the knowledge of him that hath called us to glory and virtue.",
+"1 John 1:9|If we confess our sins, he is faithful and just to forgive us our sins, and to cleanse us from all unrighteousness.",
+"1 John 3:1|Behold, what manner of love the Father hath bestowed upon us, that we should be called the sons of God.",
+"1 John 4:4|Ye are of God, little children, and have overcome them: because greater is he that is in you, than he that is in the world.",
+"1 John 4:18|There is no fear in love; but perfect love casteth out fear.",
+"1 John 5:14|And this is the confidence that we have in him, that, if we ask any thing according to his will, he heareth us.",
+"Jude 1:24-25|Now unto him that is able to keep you from falling, and to present you faultless before the presence of his glory with exceeding joy, to the only wise God our Saviour, be glory and majesty, dominion and power, both now and ever. Amen.",
+"Revelation 3:20|Behold, I stand at the door, and knock: if any man hear my voice, and open the door, I will come in to him, and will sup with him, and he with me.",
+"Revelation 21:4|And God shall wipe away all tears from their eyes; and there shall be no more death, neither sorrow, nor crying, neither shall there be any more pain: for the former things are passed away.",
+"Revelation 22:13|I am Alpha and Omega, the beginning and the end, the first and the last.",
+"Genesis 9:13|I do set my bow in the cloud, and it shall be for a token of a covenant between me and the earth.",
+"Genesis 15:1|After these things the word of the LORD came unto Abram in a vision, saying, Fear not, Abram: I am thy shield, and thy exceeding great reward.",
+"Genesis 18:14|Is any thing too hard for the LORD? At the time appointed I will return unto thee, according to the time of life, and Sarah shall have a son.",
+"Genesis 28:15|And, behold, I am with thee, and will keep thee in all places whither thou goest, and will bring thee again into this land; for I will not leave thee, until I have done that which I have spoken to thee of.",
+"Exodus 14:14|The LORD shall fight for you, and ye shall hold your peace.",
+"Exodus 15:2|The LORD is my strength and song, and he is become my salvation: he is my God, and I will prepare him an habitation; my father's God, and I will exalt him.",
+"Exodus 33:14|And he said, My presence shall go with thee, and I will give thee rest.",
+"Leviticus 26:6|And I will give peace in the land, and ye shall lie down, and none shall make you afraid: and I will rid evil beasts out of the land, neither shall the sword go through your land.",
+"Deuteronomy 4:29|But if from thence thou shalt seek the LORD thy God, thou shalt find him, if thou seek him with all thy heart and with all thy soul.",
+"Deuteronomy 7:9|Know therefore that the LORD thy God, he is God, the faithful God, which keepeth covenant and mercy with them that love him and keep his commandments to a thousand generations.",
+"Deuteronomy 8:18|But thou shalt remember the LORD thy God: for it is he that giveth thee power to get wealth, that he may establish his covenant which he sware unto thy fathers, as it is this day.",
+"Joshua 21:45|There failed not ought of any good thing which the LORD had spoken unto the house of Israel; all came to pass.",
+"Ruth 2:12|The LORD recompense thy work, and a full reward be given thee of the LORD, under whose wings thou art come to trust.",
+"1 Samuel 17:47|And all this assembly shall know that the LORD saveth not with sword and spear: for the battle is the LORD's, and he will give you into our hands.",
+"2 Samuel 22:2-3|And he said, The LORD is my rock, and my fortress, and my deliverer; The God of my rock; in him will I trust: he is my shield, and the horn of my salvation, my high tower, and my refuge, my saviour; thou savest me from violence.",
+"1 Kings 8:57|The LORD our God be with us, as he was with our fathers: let him not leave us, nor forsake us.",
+"1 Chronicles 29:12|Both riches and honour come of thee, and thou reignest over all; and in thine hand is power and might; and in thine hand it is to make great, and to give strength unto all.",
+"2 Chronicles 20:20|And they rose early in the morning, and went forth into the wilderness of Tekoa: and as they went forth, Jehoshaphat stood and said, Hear me, O Judah, and ye inhabitants of Jerusalem; Believe in the LORD your God, so shall ye be established; believe his prophets, so shall ye prosper.",
+"Ezra 8:22|The hand of our God is upon all them for good that seek him; but his power and his wrath is against all them that forsake him.",
+"Nehemiah 9:6|Thou, even thou, art LORD alone; thou hast made heaven, the heaven of heavens, with all their host, the earth, and all things that are therein, the seas, and all that is therein, and thou preservest them all; and the host of heaven worshippeth thee.",
+"Job 42:2|I know that thou canst do every thing, and that no thought can be withholden from thee.",
+"Psalm 16:5-6|The LORD is the portion of mine inheritance and of my cup: thou maintainest my lot. The lines are fallen unto me in pleasant places; yea, I have a goodly heritage.",
+"Psalm 25:14|The secret of the LORD is with them that fear him; and he will shew them his covenant.",
+"Psalm 31:24|Be of good courage, and he shall strengthen your heart, all ye that hope in the LORD.",
+"Psalm 32:1|Blessed is he whose transgression is forgiven, whose sin is covered.",
+"Psalm 34:18|The LORD is nigh unto them that are of a broken heart; and saveth such as be of a contrite spirit.",
+"Psalm 37:7|Rest in the LORD, and wait patiently for him: fret not thyself because of him who prospereth in his way, because of the man who bringeth wicked devices to pass.",
+"Psalm 42:11|Why art thou cast down, O my soul? and why art thou disquieted within me? hope thou in God: for I shall yet praise him, who is the health of my countenance, and my God.",
+"Psalm 50:15|And call upon me in the day of trouble: I will deliver thee, and thou shalt glorify me.",
+"Psalm 55:17|Evening, and morning, and at noon, will I pray, and cry aloud: and he shall hear my voice.",
+"Psalm 57:7-8|My heart is fixed, O God, my heart is fixed: I will sing and give praise. Awake up, my glory; awake, psaltery and harp: I myself will awake early.",
+"Psalm 63:7-8|Because thou hast been my help, therefore in the shadow of thy wings will I rejoice. My soul followeth hard after thee: thy right hand upholdeth me.",
+"Psalm 84:12|O LORD of hosts, blessed is the man that trusteth in thee.",
+"Psalm 91:15|He shall call upon me, and I will answer him: I will be with him in trouble; I will deliver him, and honour him.",
+"Psalm 103:17-18|But the mercy of the LORD is from everlasting to everlasting upon them that fear him, and his righteousness unto children's children; To such as keep his covenant, and to those that remember his commandments to do them.",
+"Psalm 119:18|Open thou mine eyes, that I may behold wondrous things out of thy law.",
+"Psalm 119:130|The entrance of thy words giveth light; it giveth understanding unto the simple.",
+"Psalm 120:1|In my distress I cried unto the LORD, and he heard me.",
+"Psalm 125:1-2|They that trust in the LORD shall be as mount Zion, which cannot be removed, but abideth for ever. As the mountains are round about Jerusalem, so the LORD is round about his people from henceforth even for ever.",
+"Psalm 126:5-6|They that sow in tears shall reap in joy. He that goeth forth and weepeth, bearing precious seed, shall doubtless come again with rejoicing, bringing his sheaves with him.",
+"Psalm 129:8|And they that pass by say, The blessing of the LORD be upon you: we bless you in the name of the LORD.",
+"Psalm 139:17-18|How precious also are thy thoughts unto me, O God! how great is the sum of them! If I should count them, they are more in number than the sand: when I awake, I am still with thee.",
+"Psalm 147:11|The LORD taketh pleasure in them that fear him, in those that hope in his mercy.",
+"Psalm 149:4|For the LORD taketh pleasure in his people: he will beautify the meek with salvation.",
+"Proverbs 1:33|But whoso hearkeneth unto me shall dwell safely, and shall be quiet from fear of evil.",
+"Proverbs 8:17|I love them that love me; and those that seek me early shall find me.",
+"Proverbs 12:25|Heaviness in the heart of man maketh it stoop: but a good word maketh it glad.",
+"Proverbs 17:22|A merry heart doeth good like a medicine: but a broken spirit drieth the bones.",
+"Proverbs 20:7|The just man walketh in his integrity: his children are blessed after him.",
+"Isaiah 9:6|For unto us a child is born, unto us a son is given: and the government shall be upon his shoulder: and his name shall be called Wonderful, Counsellor, The mighty God, The everlasting Father, The Prince of Peace.",
+"Isaiah 25:1|O LORD, thou art my God; I will exalt thee, I will praise thy name; for thou hast done wonderful things; thy counsels of old are faithfulness and truth.",
+"Isaiah 35:3-4|Strengthen ye the weak hands, and confirm the feeble knees. Say to them that are of a fearful heart, Be strong, fear not: behold, your God will come with vengeance, even God with a recompence; he will come and save you.",
+"Isaiah 40:1-2|Comfort ye, comfort ye my people, saith your God. Speak ye comfortably to Jerusalem, and cry unto her, that her warfare is accomplished, that her iniquity is pardoned: for she hath received of the LORD's hand double for all her sins.",
+"Isaiah 43:1|But now thus saith the LORD that created thee, O Jacob, and he that formed thee, O Israel, Fear not: for I have redeemed thee, I have called thee by thy name; thou art mine.",
+"Jeremiah 15:16|Thy words were found, and I did eat them; and thy word was unto me the joy and rejoicing of mine heart: for I am called by thy name, O LORD God of hosts.",
+"Ezekiel 37:14|And shall put my spirit in you, and ye shall live, and I shall place you in your own land: then shall ye know that I the LORD have spoken it, and performed it, saith the LORD.",
+"Joel 2:25|And I will restore to you the years that the locust hath eaten, the cankerworm, and the caterpillar, and the palmerworm, my great army which I sent among you.",
+"Nahum 1:7|The LORD is good, a strong hold in the day of trouble; and he knoweth them that trust in him.",
+"Malachi 3:6|For I am the LORD, I change not; therefore ye sons of Jacob are not consumed.",
+"Matthew 4:4|But he answered and said, It is written, Man shall not live by bread alone, but by every word that proceedeth out of the mouth of God.",
+"Matthew 18:20|For where two or three are gathered together in my name, there am I in the midst of them.",
+"Matthew 19:26|But Jesus beheld them, and said unto them, With men this is impossible; but with God all things are possible.",
+"Mark 16:15|And he said unto them, Go ye into all the world, and preach the gospel to every creature.",
+"Luke 10:19|Behold, I give unto you power to tread on serpents and scorpions, and over all the power of the enemy: and nothing shall by any means hurt you.",
+"Luke 12:7|But even the very hairs of your head are all numbered. Fear not therefore: ye are of more value than many sparrows.",
+"John 3:17|For God sent not his Son into the world to condemn the world; but that the world through him might be saved.",
+"John 8:31-32|Then said Jesus to those Jews which believed on him, If ye continue in my word, then are ye my disciples indeed; And ye shall know the truth, and the truth shall make you free.",
+"John 10:27-28|My sheep hear my voice, and I know them, and they follow me: And I give unto them eternal life; and they shall never perish, neither shall any man pluck them out of my hand.",
+"John 16:24|Hitherto have ye asked nothing in my name: ask, and ye shall receive, that your joy may be full.",
+"Acts 13:52|And the disciples were filled with joy, and with the Holy Ghost.",
+"Romans 5:8|But God commendeth his love toward us, in that, while we were yet sinners, Christ died for us.",
+"Romans 8:14|For as many as are led by the Spirit of God, they are the sons of God.",
+"Romans 12:21|Be not overcome of evil, but overcome evil with good.",
+"2 Corinthians 5:21|For he hath made him to be sin for us, who knew no sin; that we might be made the righteousness of God in him.",
+"Philippians 2:13|For it is God which worketh in you both to will and to do of his good pleasure.",
+"Hebrews 10:23|Let us hold fast the profession of our faith without wavering; (for he is faithful that promised;)",
+"1 Peter 3:8-9|Finally, be ye all of one mind, having compassion one of another, love as brethren, be pitiful, be courteous: Not rendering evil for evil, or railing for railing: but contrariwise blessing; knowing that ye are thereunto called, that ye should inherit a blessing."
+];
+
+const VERSES = RAW_VERSES.map((row) => {
+  const i = row.indexOf("|");
+  return { ref: row.slice(0, i), text: row.slice(i + 1) };
+});
+
+/* =========================================================
+   3. PRAYER LINES — one is paired with each day
+   ========================================================= */
+const PRAYERS = [
+  "Lord, thank You for this new morning. Walk with me through it.",
+  "Father, let Your favour go before me today.",
+  "Lord, make me a blessing to someone before this day ends.",
+  "Father, quiet my heart and let Your peace settle here.",
+  "Lord, strengthen me for what lies ahead, and keep me faithful.",
+  "Father, thank You for mercies that are new every morning.",
+  "Lord, let Your light shine through me today.",
+  "Father, I trust You with the things I cannot see.",
+  "Lord, keep my feet on the path You have chosen.",
+  "Father, let my words today be seasoned with grace.",
+  "Lord, thank You for the people You have placed in my life.",
+  "Father, give me eyes to see the good You are doing.",
+  "Lord, be my strength when I am weary.",
+  "Father, let this day bring glory to Your name.",
+  "Lord, teach me to rest in Your faithfulness.",
+  "Father, guard my heart and my mind in Christ Jesus.",
+];
+
+/* =========================================================
+   4. DAILY PICK — same verse all day, new one at midnight
+   ========================================================= */
+function mulberry32(seed) {
+  return function () {
+    seed |= 0;
+    seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function shuffled(list, seed) {
+  const out = list.slice();
+  const rand = mulberry32(seed);
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+// Fixed seed → the whole year's order is set once, so no verse
+// repeats until the list has been exhausted.
+const DAILY_ORDER = shuffled(VERSES, 20250601);
+
+function dayNumber(date = new Date()) {
+  return Math.floor(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86400000
+  );
+}
+
+const verseOfTheDay = () => DAILY_ORDER[dayNumber() % DAILY_ORDER.length];
+const prayerOfTheDay = () => PRAYERS[dayNumber() % PRAYERS.length];
+
+/* =========================================================
+   5. ELEMENTS & STATE
+   ========================================================= */
+const $ = (s) => document.querySelector(s);
+const el = {
+  greeting: $("#greeting"),
+  date: $("#date"),
+  verse: $("#verse"),
+  text: $("#verseText"),
+  ref: $("#verseRef"),
+  prayer: $("#prayerText"),
+  another: $("#anotherBtn"),
+  copy: $("#copyBtn"),
+  fav: $("#favBtn"),
+  savedBtn: $("#savedBtn"),
+  savedCount: $("#savedCount"),
+  dailyBtn: $("#dailyBtn"),
+  progress: $("#progress"),
+  dialog: $("#savedDialog"),
+  savedList: $("#savedList"),
+  closeDialog: $("#closeDialog"),
+  signature: $("#signature"),
+};
+
+let current = null;
+const STORAGE_KEY = "blessings.saved.v1";
+
+/* =========================================================
+   6. RENDERING
+   ========================================================= */
+function greetingText() {
+  const h = new Date().getHours();
+  const part = h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+  return SETTINGS.name ? `${part}, ${SETTINGS.name}` : part;
+}
+
+function dateText() {
+  return new Intl.DateTimeFormat(undefined, {
+    weekday: "long", month: "long", day: "numeric",
+  }).format(new Date());
+}
+
+function show(verse, animate = false) {
+  current = verse;
+  el.text.textContent = verse.text;
+  el.ref.textContent = `${verse.ref} · ${SETTINGS.translation}`;
+  el.prayer.textContent = prayerOfTheDay();
+  el.dailyBtn.hidden = verse !== verseOfTheDay();
+
+  const idx = DAILY_ORDER.indexOf(verseOfTheDay()) + 1;
+  el.progress.textContent = `Day ${idx} of ${VERSES.length}`;
+
+  if (animate && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    el.verse.classList.remove("swap");
+    void el.verse.offsetWidth;
+    el.verse.classList.add("swap");
+  }
+  updateFav();
+}
+
+/* =========================================================
+   7. SAVED VERSES
+   ========================================================= */
+function readSaved() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    return Array.isArray(raw) ? raw : [];
+  } catch { return []; }
+}
+
+function writeSaved(list) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); } catch {}
+}
+
+function updateFav() {
+  const saved = readSaved();
+  const on = current ? saved.includes(current.ref) : false;
+  el.fav.classList.toggle("is-on", on);
+  el.fav.setAttribute("aria-pressed", String(on));
+  el.fav.setAttribute("aria-label", on ? "Remove from saved" : "Save this verse");
+  el.fav.querySelector("svg").setAttribute("fill", on ? "currentColor" : "none");
+  el.savedCount.textContent = saved.length ? `(${saved.length})` : "";
+}
+
+function renderSavedList() {
+  const saved = readSaved();
+  el.savedList.replaceChildren();
+
+  if (!saved.length) {
+    const li = document.createElement("li");
+    li.className = "empty";
+    li.textContent = "No saved verses yet — tap the heart on any verse to keep it.";
+    el.savedList.append(li);
+    return;
+  }
+
+  for (const ref of saved) {
+    const verse = VERSES.find((v) => v.ref === ref);
+    if (!verse) continue;
+
+    const li = document.createElement("li");
+    li.className = "saved-item";
+
+    const p = document.createElement("p");
+    p.className = "saved-text";
+    p.textContent = verse.text;
+
+    const meta = document.createElement("div");
+    meta.className = "saved-meta";
+
+    const cite = document.createElement("cite");
+    cite.className = "saved-ref";
+    cite.textContent = verse.ref;
+
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.className = "saved-remove";
+    remove.textContent = "Remove";
+    remove.setAttribute("aria-label", `Remove ${verse.ref}`);
+    remove.addEventListener("click", () => {
+      writeSaved(readSaved().filter((r) => r !== ref));
+      renderSavedList();
+      updateFav();
+    });
+
+    meta.append(cite, remove);
+    li.append(p, meta);
+    el.savedList.append(li);
+  }
+}
+
+/* =========================================================
+   8. INTERACTIONS
+   ========================================================= */
+el.another.addEventListener("click", () => {
+  if (VERSES.length < 2) return;
+  let next;
+  do { next = VERSES[Math.floor(Math.random() * VERSES.length)]; }
+  while (next.ref === current.ref);
+  show(next, true);
+});
+
+el.dailyBtn.addEventListener("click", () => show(verseOfTheDay(), true));
+
+el.copy.addEventListener("click", async () => {
+  const text = `${current.text}\n— ${current.ref} (${SETTINGS.translation})`;
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.append(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch {}
+    ta.remove();
+  }
+  flash(el.copy, "Copied");
+});
+
+function flash(button, msg) {
+  const original = button.innerHTML;
+  button.textContent = msg;
+  button.disabled = true;
+  setTimeout(() => { button.innerHTML = original; button.disabled = false; }, 1400);
+}
+
+el.fav.addEventListener("click", () => {
+  const saved = readSaved();
+  const i = saved.indexOf(current.ref);
+  if (i >= 0) saved.splice(i, 1); else saved.push(current.ref);
+  writeSaved(saved);
+  updateFav();
+});
+
+el.savedBtn.addEventListener("click", () => {
+  renderSavedList();
+  el.dialog.showModal();
+});
+
+el.closeDialog.addEventListener("click", () => el.dialog.close());
+el.dialog.addEventListener("click", (e) => {
+  if (e.target === el.dialog) el.dialog.close();
+});
+
+/* =========================================================
+   9. BOOT
+   ========================================================= */
+el.greeting.textContent = greetingText();
+el.date.textContent = dateText();
+
+if (SETTINGS.signature) {
+  el.signature.textContent = SETTINGS.signature;
+  el.signature.hidden = false;
+}
+
+show(verseOfTheDay());
+
+// Roll over to the new verse at midnight if left open.
+let trackedDay = dayNumber();
+setInterval(() => {
+  const today = dayNumber();
+  if (today !== trackedDay) {
+    trackedDay = today;
+    el.greeting.textContent = greetingText();
+    el.date.textContent = dateText();
+    show(verseOfTheDay(), true);
+  }
+}, 60000);
+
+/* =========================================================
+   10. PWA — service worker + install button
+   ========================================================= */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}
+
+let installPrompt = null;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  installPrompt = e;
+
+  const btn = document.createElement("button");
+  btn.className = "link-btn";
+  btn.id = "installBtn";
+  btn.type = "button";
+  btn.textContent = "Install app";
+  btn.addEventListener("click", async () => {
+    if (!installPrompt) return;
+    installPrompt.prompt();
+    await installPrompt.userChoice;
+    installPrompt = null;
+    btn.remove();
+  });
+  el.savedBtn.after(btn);
+});
+</script>
+</body>
+</html>
